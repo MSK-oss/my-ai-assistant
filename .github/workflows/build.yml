@@ -1,0 +1,22 @@
+name: Build Android APK
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Inject API Key Securely
+        run: echo "GROQ_API_KEY = '${{ secrets.GROQ_API_KEY }}'" > api_secrets.py
+        
+      - name: Build with Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          buildozer_version: stable
+          
+      - name: Upload Finished APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-assistant-apk
+          path: ${{ steps.buildozer.outputs.filename }}
