@@ -2,21 +2,30 @@ name: Build Android APK
 on: [push]
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        
       - name: Inject API Key Securely
         run: echo "GROQ_API_KEY = '${{ secrets.GROQ_API_KEY }}'" > api_secrets.py
         
-      - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
-        id: buildozer
-        with:
-          buildozer_version: stable
+      - name: Install System Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+          
+      - name: Install Buildozer
+        run: |
+          pip3 install --user buildozer cython==0.29.33 virtualenv
+          
+      - name: Compile App
+        run: |
+          export PATH=$PATH:~/.local/bin/
+          yes | buildozer android debug
           
       - name: Upload Finished APK
         uses: actions/upload-artifact@v4
         with:
           name: ai-assistant-apk
-          path: ${{ steps.buildozer.outputs.filename }}
+          path: bin/*.apk
