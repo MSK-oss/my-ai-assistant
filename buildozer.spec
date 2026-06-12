@@ -14,7 +14,7 @@ android.permissions = INTERNET,RECORD_AUDIO,WAKE_LOCK,FOREGROUND_SERVICE
 services = AIBrain:service.py
 android.api = 33
 android.minapi = 24
-android.ndk = 25b
+android.ndk = 25c
 android.accept_sdk_license = True
 p4a.branch = master
 
