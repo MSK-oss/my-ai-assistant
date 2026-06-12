@@ -22,6 +22,7 @@ jobs:
       - name: Compile App
         run: |
           export PATH=$PATH:~/.local/bin/
+          export GRADLE_OPTS="-Xmx2048m"
           yes | buildozer android debug
           
       - name: Upload Finished APK
